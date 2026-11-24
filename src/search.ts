@@ -8,10 +8,10 @@ import { EMBED_MODEL, embed } from "./llm.ts";
 // ingest.ts와 같은 방식: 이 파일 기준 한 단계 위 = 프로젝트 루트의 index.json.
 const INDEX_PATH = join(import.meta.dirname, "..", "index.json");
 
-type SearchResult = { score: number; chunk: IndexedChunk };
+export type SearchResult = { score: number; chunk: IndexedChunk };
 
 // 색인 문제(파일 없음/모델 불일치) 전용 에러. Ollama 에러와 구분해 메시지를 그대로 보여주기 위해 따로 둔다.
-class IndexError extends Error {}
+export class IndexError extends Error {}
 
 // 두 벡터가 가리키는 "방향"이 얼마나 같은지: 같은 방향 1, 직각 0, 정반대 -1.
 export function cosine(a: number[], b: number[]): number {
