@@ -7,7 +7,9 @@
     "node": ">=24"
   },
   "scripts": {
-    "check": "tsx scripts/check-env.ts"
+    "check": "tsx scripts/check-env.ts",
+    "ingest": "tsx src/ingest.ts",
+    "test": "tsx --test src/*.test.ts"
   },
   "dependencies": {
     "openai": "^7.63.0"
