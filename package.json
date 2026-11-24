@@ -1,0 +1,20 @@
+{
+  "name": "mini-rag",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "check": "tsx scripts/check-env.ts"
+  },
+  "dependencies": {
+    "openai": "^7.63.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
