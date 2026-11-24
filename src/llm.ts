@@ -14,3 +14,11 @@ export const llm = new OpenAI({
   // Ollama는 키를 검사하지 않는다. SDK가 키 없이는 생성되지 않아서 아무 문자열이나 넣어 둔다.
   apiKey: "ollama",
 });
+
+// 문장 여러 개 → 숫자 배열(벡터) 여러 개. ingest(문서 조각)와 search(질문)가 같은 모델로 바꿔야 비교할 수 있다.
+export async function embed(texts: string[]): Promise<number[][]> {
+  // 문자열 배열을 HTTP POST /v1/embeddings 한 번으로 보낸다. 응답: { data: [{ index, embedding: number[] }] }
+  const response = await llm.embeddings.create({ model: EMBED_MODEL, input: texts });
+  // index = 입력 배열에서의 위치. 응답 순서를 믿지 않고 index로 정렬해 texts[i] ↔ 벡터[i]를 맞춘다.
+  return response.data.sort((a, b) => a.index - b.index).map((item) => item.embedding);
+}
