@@ -9,6 +9,7 @@
   "scripts": {
     "check": "tsx scripts/check-env.ts",
     "ingest": "tsx src/ingest.ts",
+    "search": "tsx src/search.ts",
     "test": "tsx --test src/*.test.ts"
   },
   "dependencies": {
