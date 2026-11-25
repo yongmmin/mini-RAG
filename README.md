@@ -87,14 +87,17 @@ These rules keep the moving parts visible:
 docs/               source documents (the knowledge the answers are based on)
 eval/questions.json   fixed evaluation questions with the expected source section
 scripts/check-env.ts  environment check
-src/llm.ts          Ollama client, model names, embed()
-src/chunk.ts        markdown → chunks
-src/ingest.ts       chunks → embeddings → index.json
-src/search.ts       cosine similarity and top-K retrieval
-src/keyword.ts      bigram tokenizer and BM25 keyword scores
-src/ask.ts          retrieved chunks + rules + question → answer
-src/eval.ts         run the question set, print hit@3 and refusal scores
-src/*.test.ts       tests (node:test)
+src/config.ts       every tunable in one place: paths, Ollama URL, model names, chunk size, top-K, BM25/RRF constants
+src/types.ts        shared data shapes: document, chunk, index file, search result, search mode
+src/errors.ts       IndexError / ChatError and Ollama error → "cause + fix command" messages
+src/llm.ts          Ollama client, embed(), chat()
+src/ingest/         load.ts (docs/*.md → documents), chunk.ts (markdown → chunks), indexer.ts (chunks → embeddings → index)
+src/store/          json-store.ts: read / write index.json, embedding-model check
+src/retrieval/      vector.ts (cosine), keyword.ts (bigram + BM25), hybrid.ts (RRF), search.ts (mode → ranker table)
+src/generation/     prompt.ts (rules + numbered chunks → messages), ask.ts (search → prompt → answer)
+src/evaluation/     score.ts (hit / refusal checks), run.ts (run the question set → scores)
+src/cli/            ingest.ts, search.ts, ask.ts, eval.ts: argument parsing, printing, exit codes (npm run …)
+src/**/*.test.ts    tests (node:test), next to the module they test
 NOTES.md            Phase 6–8 experiment log (Korean)
 PLAN.md             the study plan (Korean)
 ROADMAP.md          next steps: scaling, multimodal, next phases (Korean)

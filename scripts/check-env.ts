@@ -1,6 +1,7 @@
 // 환경 점검: Node → Ollama 서버 → 모델 설치 → 생성 모델 → embedding 모델 순서로 확인한다.
 // 뒤 단계는 앞 단계가 성공해야 의미가 있으므로, 첫 실패에서 원인과 해결 명령을 출력하고 멈춘다.
-import { CHAT_MODEL, EMBED_MODEL, OLLAMA_URL, llm } from "../src/llm.ts";
+import { CHAT_MODEL, EMBED_MODEL, OLLAMA_URL } from "../src/config.ts";
+import { llm } from "../src/llm.ts";
 
 // 실패를 출력하고 프로세스를 종료한다. 호출한 쪽은 이 줄 다음으로 진행하지 않는다.
 function fail(title: string, cause: string, fix: string): never {

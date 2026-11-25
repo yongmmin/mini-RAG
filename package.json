@@ -8,11 +8,11 @@
   },
   "scripts": {
     "check": "tsx scripts/check-env.ts",
-    "ingest": "tsx src/ingest.ts",
-    "search": "tsx src/search.ts",
-    "ask": "tsx src/ask.ts",
-    "eval": "tsx src/eval.ts",
-    "test": "tsx --test src/*.test.ts"
+    "ingest": "tsx src/cli/ingest.ts",
+    "search": "tsx src/cli/search.ts",
+    "ask": "tsx src/cli/ask.ts",
+    "eval": "tsx src/cli/eval.ts",
+    "test": "tsx --test \"src/**/*.test.ts\""
   },
   "dependencies": {
     "openai": "^7.63.0"

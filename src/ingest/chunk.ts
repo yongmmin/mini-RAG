@@ -1,16 +1,8 @@
 // 문서 자르기(chunking): 마크다운 문자열 하나 → 검색 단위 조각(ChunkDraft) 배열.
-// 파일을 읽지 않는 순수 함수만 둔다. 파일 읽기는 ingest.ts가 맡는다.
-
-// 조각 본문의 최대 글자 수(머리말 제외). Phase 6에서 이 값을 직접 바꿔 가며 실험한다.
-export const MAX_CHARS = 800;
-
-// 아직 embedding이 붙지 않은 조각. Phase 3에서 여기에 embedding(숫자 배열)이 더해진다.
-export type ChunkDraft = {
-  id: string; // "observation.md#2" = 파일 이름 + 파일 안 순번(0부터)
-  source: string; // 파일 이름. 답변의 출처 표시에 쓴다
-  heading: string; // ## 소제목 (첫 ## 이전 본문이면 문서 제목)
-  text: string; // "문서 제목 > 소제목\n본문" — embedding과 LLM에 실제로 들어가는 글
-};
+// 파일을 읽지 않는 순수 함수만 둔다. 파일 읽기는 ingest/load.ts가 맡는다.
+// 조각 본문의 최대 글자 수 MAX_CHARS는 config.ts에 있다 (Phase 6에서 바꿔 가며 실험한다).
+import { MAX_CHARS } from "../config.ts";
+import type { ChunkDraft } from "../types.ts";
 
 // ## 하나 = 섹션 하나. 아직 길이로 나누기 전 상태다.
 type Section = { heading: string; body: string };

@@ -1,12 +1,8 @@
-// Ollama 클라이언트 + 모델 설정. 모델 이름은 이 파일 한 곳에서만 정의한다.
+// Ollama 클라이언트: embed()와 chat() 두 함수로만 모델을 부른다. 모델 이름·주소는 config.ts에 있다.
+// 확장 자리: 다른 모델 서버(OpenAI, vLLM 등)로 바꿀 때 이 파일만 고친다.
 import OpenAI from "openai";
-
-// Ollama는 레포 안이 아니라 내 컴퓨터에서 따로 떠 있는 HTTP 서버다. 코드는 이 주소로 요청만 보낸다.
-export const OLLAMA_URL = "http://localhost:11434";
-
-// 환경 변수가 있으면 그것을, 없으면 기본 모델을 쓴다. (예: CHAT_MODEL=qwen3:4b npm run check)
-export const CHAT_MODEL = process.env.CHAT_MODEL ?? "gemma3:4b";
-export const EMBED_MODEL = process.env.EMBED_MODEL ?? "bge-m3";
+import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
+import { CHAT_MODEL, EMBED_MODEL, OLLAMA_URL } from "./config.ts";
 
 // Ollama가 OpenAI와 같은 모양의 API(/v1)를 제공하므로 openai SDK를 그대로 쓴다. 요청은 OpenAI가 아니라 로컬 Ollama로 간다.
 export const llm = new OpenAI({
@@ -21,4 +17,15 @@ export async function embed(texts: string[]): Promise<number[][]> {
   const response = await llm.embeddings.create({ model: EMBED_MODEL, input: texts });
   // index = 입력 배열에서의 위치. 응답 순서를 믿지 않고 index로 정렬해 texts[i] ↔ 벡터[i]를 맞춘다.
   return response.data.sort((a, b) => a.index - b.index).map((item) => item.embedding);
+}
+
+// messages → 답 문자열. HTTP POST /v1/chat/completions 한 번.
+export async function chat(messages: ChatCompletionMessageParam[]): Promise<string> {
+  const response = await llm.chat.completions.create({
+    model: CHAT_MODEL,
+    temperature: 0, // 무작위성 없이 가장 확률 높은 답 → 같은 질문엔 같은 답 (비교·관찰하기 쉽게)
+    messages,
+  });
+  // 응답: { choices: [{ message: { role: "assistant", content } }] }. 첫 번째 답만 쓴다.
+  return response.choices[0]?.message.content?.trim() ?? "";
 }
