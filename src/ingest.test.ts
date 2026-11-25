@@ -23,3 +23,8 @@ test("404 모델 없음 → ollama pull <EMBED_MODEL> 안내", () => {
 test("그 외 에러 → 원문 메시지를 그대로 보여 준다", () => {
   assert.match(explainError(new Error("something odd")), /something odd/);
 });
+
+test("두 번째 인자로 모델 이름을 주면 그 모델의 pull 안내 (생성 모델용)", () => {
+  const err = new NotFoundError(404, undefined, `model "nope" not found`, new Headers());
+  assert.match(explainError(err, "nope"), /ollama pull nope/);
+});

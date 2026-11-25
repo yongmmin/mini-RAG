@@ -55,16 +55,17 @@ async function embedChunks(chunks: ChunkDraft[]): Promise<IndexedChunk[]> {
 }
 
 // Ollama 에러 → "원인 + 해결 명령" 문장 (PLAN §6.5). 네트워크 없이 테스트할 수 있게 순수 함수로 둔다.
-export function explainError(err: unknown): string {
+// model: 요청에 쓴 모델. 기본은 embedding 모델, 답 생성(ask.ts)에서는 CHAT_MODEL을 넘긴다.
+export function explainError(err: unknown, model = EMBED_MODEL): string {
   const cause = (err as { cause?: { code?: string } })?.cause;
   if (err instanceof APIConnectionError || cause?.code === "ECONNREFUSED") {
     return `Ollama에 연결할 수 없다 (서버가 꺼져 있음). 실행: ollama serve`;
   }
   const message = err instanceof Error ? err.message : String(err);
   if ((err as { status?: number })?.status === 404 || /not found/i.test(message)) {
-    return `embedding 모델 '${EMBED_MODEL}'이 없다. 설치: ollama pull ${EMBED_MODEL}`;
+    return `모델 '${model}'이 없다. 설치: ollama pull ${model}`;
   }
-  return `embedding 실패: ${message}`;
+  return `모델 '${model}' 요청 실패: ${message}`;
 }
 
 async function main(): Promise<void> {
