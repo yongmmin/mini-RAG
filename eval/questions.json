@@ -16,5 +16,12 @@
   { "question": "모바일 앱으로도 관측을 예약할 수 있어?", "type": "문서에 없음", "expectedSource": null },
   { "question": "고객센터 전화번호 알려줘", "type": "문서에 없음", "expectedSource": null },
   { "question": "회원 탈퇴는 어떻게 해?", "type": "문서에 없음", "expectedSource": null },
-  { "question": "관측 예약을 취소하면 요금을 환불받을 수 있어?", "type": "문서에 없음", "expectedSource": null }
+  { "question": "관측 예약을 취소하면 요금을 환불받을 수 있어?", "type": "문서에 없음", "expectedSource": null },
+  { "question": "OBS-로 시작하는 번호는 뭐야?", "type": "키워드", "expectedSource": "observation.md", "expectedHeading": "관측 예약 방법" },
+  { "question": "화요일 UTC 02:00~04:00에는 무슨 일이 있어?", "type": "키워드", "expectedSource": "observation.md", "expectedHeading": "시간창 제한" },
+  { "question": "NORAD 번호로 검색하면 뭐가 나와?", "type": "키워드", "expectedSource": "observation.md", "expectedHeading": "관측 예약 방법" },
+  { "question": "관측 시작 2시간 전인데 예약 시간을 바꿀 수 있어?", "type": "헷갈림", "expectedSource": "observation.md", "expectedHeading": "예약 변경" },
+  { "question": "비밀번호 재설정 링크는 몇 분 동안 유효해?", "type": "헷갈림", "expectedSource": "account.md", "expectedHeading": "비밀번호 정책" },
+  { "question": "예약을 제출하면 확인 메일은 언제 와?", "type": "단어 겹침", "expectedSource": "observation.md", "expectedHeading": "관측 예약 방법" },
+  { "question": "지상국은 어떤 장비로 이루어져 있어?", "type": "용어", "expectedSource": "glossary.md", "expectedHeading": "지상국" }
 ]

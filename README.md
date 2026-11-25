@@ -32,6 +32,7 @@ Follow the phases in order. Each one starts with a concept, adds a small piece o
 | 5 | Generation | The exact messages the LLM receives; system vs user roles; a prompt example that leaked into answers | [#6](https://github.com/yongmmin/mini-RAG/pull/6) |
 | 6 | Tuning experiments | Change one setting at a time; when retrieval is right but the answer is wrong; top-K trade-offs | [#7](https://github.com/yongmmin/mini-RAG/pull/7) |
 | 7 | Evaluation | A fixed 18-question set; retrieval (hit@3) and refusals scored separately; a perfect score that still hides the chunk-level change seen in Phase 6 | [#9](https://github.com/yongmmin/mini-RAG/pull/9) |
+| 8 | Hybrid search | Keyword search (BM25 over character bigrams) written by hand; merging two rankings by rank (RRF), not by score; a harder 25-question set where vector and keyword miss different questions | [#11](https://github.com/yongmmin/mini-RAG/pull/11) |
 
 Each phase is one PR, so its diff shows only that phase. All of them are merged into `main`, and each phase's branch still exists: check one out (for example `git checkout feat/phase-4-search`) to see the repository as it was at that step.
 
@@ -59,6 +60,7 @@ npm run check                       # Node, Ollama server, models, chat call, em
 npm run ingest -- --dry-run         # show the chunks only
 npm run ingest                      # embed the chunks and write index.json
 npm run search "예약을 언제까지 취소할 수 있어?"   # top 3 chunks with scores
+npm run search -- --mode hybrid "OBS-로 시작하는 번호는 뭐야?"   # --mode vector (default) | keyword | hybrid
 npm run ask "예약을 언제까지 취소할 수 있어?"      # answer with [n] citations
 npm run eval   # score retrieval (hit@3) and refusals on eval/questions.json
 npm test
@@ -89,9 +91,10 @@ src/llm.ts          Ollama client, model names, embed()
 src/chunk.ts        markdown → chunks
 src/ingest.ts       chunks → embeddings → index.json
 src/search.ts       cosine similarity and top-K retrieval
+src/keyword.ts      bigram tokenizer and BM25 keyword scores
 src/ask.ts          retrieved chunks + rules + question → answer
 src/eval.ts         run the question set, print hit@3 and refusal scores
 src/*.test.ts       tests (node:test)
-NOTES.md            Phase 6–7 experiment log (Korean)
+NOTES.md            Phase 6–8 experiment log (Korean)
 PLAN.md             the study plan (Korean)
 ```
