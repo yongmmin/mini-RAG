@@ -1,8 +1,8 @@
-// 검색의 순수 부분만 테스트한다: cosine 계산, 순위/topK, 모델 불일치 안내. 네트워크 호출 없음.
+// 검색의 순수 부분만 테스트한다: cosine 계산, 순위/topK, RRF 합치기, 모델 불일치 안내. 네트워크 호출 없음.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { IndexedChunk } from "./ingest.ts";
-import { checkEmbedModel, cosine, loadIndex, rankChunks } from "./search.ts";
+import { checkEmbedModel, cosine, loadIndex, rankChunks, rrf } from "./search.ts";
 
 // 부동소수점은 1.0000000002 처럼 나올 수 있어 "거의 같음"으로 비교한다.
 function assertClose(actual: number, expected: number): void {
@@ -35,6 +35,23 @@ test("rankChunks: 점수 높은 순으로 정렬하고 topK개만 남긴다", ()
   );
   assertClose(ranked[0].score, 1);
   assert.ok(ranked[0].score > ranked[1].score);
+});
+
+test("rrf: 점수가 아니라 순위로 합친다 — 두 목록 모두 위쪽인 조각이 1위", () => {
+  // 점수 단위가 달라도(cosine 0.7 / BM25 5.0) 순위만 쓰므로 상관없다.
+  const a = fakeChunk("a", []);
+  const b = fakeChunk("b", []);
+  const c = fakeChunk("c", []);
+  const vector = [a, b, c].map((chunk) => ({ score: 0.7, chunk }));
+  const keyword = [c, a].map((chunk) => ({ score: 5, chunk }));
+  const fused = rrf([vector, keyword]);
+  // a: 1/(60+1) + 1/(60+2), c: 1/(60+3) + 1/(60+1), b: 1/(60+2) (한 목록에만 있어도 남는다)
+  assert.deepEqual(
+    fused.map((r) => r.chunk.id),
+    ["a", "c", "b"],
+  );
+  assertClose(fused[0].score, 1 / 61 + 1 / 62);
+  assertClose(fused[2].score, 1 / 62);
 });
 
 test("checkEmbedModel: 같은 모델이면 통과", () => {

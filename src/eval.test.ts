@@ -1,4 +1,4 @@
-// 채점의 순수 부분만 테스트한다: 검색 적중(isHit), 거절 판정(isRefusal). 네트워크 호출 없음.
+// 채점의 순수 부분만 테스트한다: 검색 적중(isHit, hit@1·hit@3), 거절 판정(isRefusal). 네트워크 호출 없음.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { SearchResult } from "./search.ts";
@@ -32,6 +32,11 @@ test("isHit: 한 섹션이 여러 조각으로 나뉘어도 그중 하나만 들
   // "관측 예약 방법"은 2조각(#0, #1)으로 나뉜다. 뒷조각 하나만 top-3에 있어도 맞힌 것으로 본다.
   const split = [fakeResult("observation.md#1", "observation.md", "관측 예약 방법"), ...results.slice(1)];
   assert.equal(isHit(split, { expectedSource: "observation.md", expectedHeading: "관측 예약 방법" }), true);
+});
+
+test("isHit: k=1이면 1위 조각만 본다 (hit@1)", () => {
+  assert.equal(isHit(results, { expectedSource: "observation.md", expectedHeading: "예약 취소" }, 1), true);
+  assert.equal(isHit(results, { expectedSource: "account.md", expectedHeading: "로그인 잠금" }, 1), false);
 });
 
 test("isRefusal: 정해진 거절 문구 그대로면 거절", () => {
