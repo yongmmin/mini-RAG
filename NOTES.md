@@ -28,9 +28,11 @@
 
 ```bash
 cd /Users/ym/Documents/mini-RAG
+rm -rf /tmp/rag-exp    # 다시 실행할 때 이전 복사본·링크를 지운다 (안 지우면 ln이 기존 링크 안쪽에 링크를 만든다)
 rsync -a --exclude node_modules --exclude .git ./ /tmp/rag-exp/
 ln -s "$PWD/node_modules" /tmp/rag-exp/node_modules
 cd /tmp/rag-exp
+nvm use                # .nvmrc = 24.22.1
 # 여기서 상수 한 줄만 바꾸고 → (필요하면) npm run ingest → npm run search / npm run ask
 ```
 
@@ -40,7 +42,7 @@ cd /tmp/rag-exp
 
 ## 기준선 (아무것도 안 바꿈: MAX_CHARS 800, 머리말 있음, topK 3, gemma3:4b)
 
-조각 14개 (account 4, glossary 5, observation 5). "관측 예약 방법" 섹션은 2조각으로 나뉜다: `#0` 머리말+1~4단계(747자), `#1` 5단계(229자).
+조각 14개 (account 4, glossary 5, observation 5). "관측 예약 방법" 섹션은 2조각으로 나뉜다: `#0` 섹션 도입부+1~4단계(본문 747자), `#1` 5단계(본문 229자).
 
 | Q | 1위 | 2위 | 3위 | 답 (gemma3:4b) | 맞나 |
 |---|---|---|---|---|---|
