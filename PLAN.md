@@ -22,7 +22,7 @@ npm run ask "예약을 언제까지 취소할 수 있어?"
 - **프레임워크 금지.** LangChain, LlamaIndex, Vercel AI SDK 등을 쓰지 않는다. RAG의 각 단계를 직접 코드로 짠다.
 - **Vector DB 금지 (Phase 7까지).** 벡터 저장소는 `index.json` 파일로 대신한다.
 - 허용 의존성: `openai`(Ollama의 OpenAI 호환 API 호출용 SDK), `tsx`, `typescript`, `@types/node`. 이 외의 패키지가 필요하면 추가 전에 사용자에게 이유를 설명하고 승인받는다.
-- 언어: TypeScript, ESM, Node.js 20 이상.
+- 언어: TypeScript, ESM, Node.js 24.22.1 (`.nvmrc`로 고정, `nvm use`).
 
 ## 3. 사용 모델
 
@@ -87,7 +87,7 @@ mini-rag/
 - `package.json`, `tsconfig.json`, `.gitignore`(`node_modules`, `index.json`) 생성
 - `src/llm.ts`: OpenAI SDK를 `baseURL: "http://localhost:11434/v1"`, `apiKey: "ollama"`로 생성하여 export. `CHAT_MODEL`, `EMBED_MODEL` export (환경 변수 우선)
 - `scripts/check-env.ts`: 다음을 순서대로 확인하고 결과를 ✅/❌로 출력
-  1. Node.js 버전 20 이상
+  1. Node.js 버전 24 이상 (`.nvmrc` = 24.22.1)
   2. Ollama 서버 응답 (`GET http://localhost:11434/api/tags`)
   3. `CHAT_MODEL`, `EMBED_MODEL`이 설치되어 있는지
   4. 생성 모델에 "안녕"을 보내 응답이 오는지 (hello world)
