@@ -1,0 +1,20 @@
+[
+  { "question": "예약을 언제까지 취소할 수 있어?", "type": "단어 겹침", "expectedSource": "observation.md", "expectedHeading": "예약 취소" },
+  { "question": "로그인 계속 틀리면?", "type": "표현 바꿈", "expectedSource": "account.md", "expectedHeading": "로그인 잠금" },
+  { "question": "결제 방법", "type": "문서에 없음", "expectedSource": null },
+  { "question": "관측 취소 기한이 어떻게 돼?", "type": "표현 바꿈", "expectedSource": "observation.md", "expectedHeading": "예약 취소" },
+  { "question": "관측 예약 절차를 단계별로 알려줘", "type": "단어 겹침", "expectedSource": "observation.md", "expectedHeading": "관측 예약 방법" },
+  { "question": "하루에 최대 몇 분까지 관측할 수 있어?", "type": "단어 겹침", "expectedSource": "observation.md", "expectedHeading": "시간창 제한" },
+  { "question": "비밀번호는 몇 자 이상이어야 해?", "type": "단어 겹침", "expectedSource": "account.md", "expectedHeading": "비밀번호 정책" },
+  { "question": "이미 잡아 둔 관측 일정을 몇 번까지 고칠 수 있어?", "type": "표현 바꿈", "expectedSource": "observation.md", "expectedHeading": "예약 변경" },
+  { "question": "갓 만든 계정으로는 어떤 기능을 쓸 수 있어?", "type": "표현 바꿈", "expectedSource": "account.md", "expectedHeading": "권한 등급" },
+  { "question": "세계 공통 시각이랑 한국 시각은 몇 시간 차이야?", "type": "표현 바꿈", "expectedSource": "glossary.md", "expectedHeading": "UTC" },
+  { "question": "TLE가 뭐야?", "type": "용어", "expectedSource": "glossary.md", "expectedHeading": "TLE" },
+  { "question": "AOS와 LOS는 무엇을 뜻해?", "type": "용어", "expectedSource": "glossary.md", "expectedHeading": "pass (통과)" },
+  { "question": "elevation이 낮으면 왜 관측에 불리해?", "type": "용어", "expectedSource": "glossary.md", "expectedHeading": "고도각" },
+  { "question": "2FA는 어떤 등급이 꼭 켜야 해?", "type": "용어", "expectedSource": "account.md", "expectedHeading": "2단계 인증" },
+  { "question": "모바일 앱으로도 관측을 예약할 수 있어?", "type": "문서에 없음", "expectedSource": null },
+  { "question": "고객센터 전화번호 알려줘", "type": "문서에 없음", "expectedSource": null },
+  { "question": "회원 탈퇴는 어떻게 해?", "type": "문서에 없음", "expectedSource": null },
+  { "question": "관측 예약을 취소하면 요금을 환불받을 수 있어?", "type": "문서에 없음", "expectedSource": null }
+]

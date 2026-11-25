@@ -62,7 +62,8 @@ function printAnswer(results: SearchResult[], answer: string): void {
 }
 
 // 에러가 난 단계에 맞는 안내: 색인 문제 → 메시지 그대로 / 생성 단계 → CHAT_MODEL 기준 / 그 외(검색 단계) → embedding 모델 기준.
-function describeError(err: unknown): string {
+// Phase 7(eval.ts)도 같은 안내를 쓰도록 export 한다.
+export function describeError(err: unknown): string {
   if (err instanceof IndexError) return err.message;
   if (err instanceof ChatError) return explainError(err.cause, CHAT_MODEL);
   return explainError(err);
