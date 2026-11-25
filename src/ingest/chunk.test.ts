@@ -1,7 +1,8 @@
 // chunkMarkdown 동작을 고정하는 테스트. Node 내장 test runner만 쓴다 (추가 패키지 없음).
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { MAX_CHARS, chunkMarkdown } from "./chunk.ts";
+import { MAX_CHARS } from "../config.ts";
+import { chunkMarkdown } from "./chunk.ts";
 
 // 본문 = 머리말 첫 줄을 뗀 나머지. 길이 검사는 본문 기준이다.
 const bodyOf = (text: string) => text.slice(text.indexOf("\n") + 1);

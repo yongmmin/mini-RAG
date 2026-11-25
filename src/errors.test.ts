@@ -2,8 +2,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { APIConnectionError, NotFoundError } from "openai";
-import { EMBED_MODEL } from "./llm.ts";
-import { explainError } from "./ingest.ts";
+import { EMBED_MODEL } from "./config.ts";
+import { explainError } from "./errors.ts";
 
 test("연결 실패(Ollama 꺼짐) → ollama serve 안내", () => {
   const err = new APIConnectionError({ message: "Connection error." });

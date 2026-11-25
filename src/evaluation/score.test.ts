@@ -1,8 +1,8 @@
 // 채점의 순수 부분만 테스트한다: 검색 적중(isHit, hit@1·hit@3), 거절 판정(isRefusal). 네트워크 호출 없음.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import type { SearchResult } from "./search.ts";
-import { isHit, isRefusal } from "./eval.ts";
+import type { SearchResult } from "../types.ts";
+import { isHit, isRefusal } from "./score.ts";
 
 // 테스트용 검색 결과: 채점에 쓰는 source·heading만 의미 있고 나머지는 자리 채움.
 function fakeResult(id: string, source: string, heading: string): SearchResult {

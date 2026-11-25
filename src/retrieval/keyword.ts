@@ -1,5 +1,7 @@
 // 키워드 검색: 질문과 조각에 "같은 글자 조각"이 얼마나, 얼마나 드물게 겹치는지로 점수를 매긴다 (BM25). embedding 없음.
-// 데이터 흐름: 질문 문자열 → tokenize() → 질문 토큰들 → (조각 text마다 tokenize → BM25) → 조각별 점수.
+// 데이터 흐름: 질문 문자열 → tokenize() → 질문 토큰들 → (조각 text마다 tokenize → BM25) → 조각별 점수 → rankByKeyword() 순위.
+import { BM25 } from "../config.ts";
+import type { IndexedChunk, SearchResult } from "../types.ts";
 
 // 한국어는 띄어쓰기 단위가 단어가 아니다 ("예약을", "예약은", "예약하려면"). 형태소 분석기 대신 글자 2개씩 겹쳐 자르면(bigram)
 // 조사·어미가 달라도 "예약" 토큰은 똑같이 나온다. 대신 "약을", "약은" 같은 뜻 없는 토큰도 함께 생긴다.
@@ -14,9 +16,8 @@ export function tokenize(text: string): string[] {
   return tokens;
 }
 
-// BM25 상수: 보통 쓰는 기본값.
-const K1 = 1.2; // TF 포화 정도: 같은 토큰이 여러 번 나와도 점수가 무한히 커지지 않게 한다 (클수록 늦게 포화)
-const B = 0.75; // 길이 보정 세기: 0이면 길이 무시, 1이면 길이에 완전히 비례해 깎는다
+// BM25 상수 k1(TF 포화 정도)·b(길이 보정 세기)는 config.ts에 있다.
+const { k1: K1, b: B } = BM25;
 
 // 질문 토큰마다 "이 조각에 몇 번 나오나(TF)" × "전체 조각 중 얼마나 드문가(IDF)"를 더한다. 조각 순서 그대로 점수 배열을 돌려준다.
 // 조각 통계는 index.json의 text로 질문할 때마다 계산한다 (조각 14개라 충분히 빠르다). (순수 함수: 파일·네트워크 없음)
@@ -45,4 +46,14 @@ export function bm25Scores(queryTokens: string[], chunks: { text: string }[]): n
     }
     return score;
   });
+}
+
+// 키워드 방식: 질문을 bigram으로 자르고 조각마다 BM25 점수를 매겨 높은 순으로 topK개. (순수 함수: embedding 호출 없음)
+export function rankByKeyword(question: string, chunks: IndexedChunk[], topK: number): SearchResult[] {
+  const scores = bm25Scores(tokenize(question), chunks);
+  return chunks
+    .map((chunk, i) => ({ score: scores[i], chunk }))
+    .filter((r) => r.score > 0) // 겹치는 토큰이 하나도 없는 조각은 "키워드로는 못 찾음" → 순위에 넣지 않는다
+    .sort((a, b) => b.score - a.score)
+    .slice(0, topK);
 }

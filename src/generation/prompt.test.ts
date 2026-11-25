@@ -1,8 +1,8 @@
 // 답 생성의 순수 부분만 테스트한다: 자료(context) 번호 붙이기, messages 구성. 네트워크 호출 없음 (LLM을 부르지 않는다).
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import type { SearchResult } from "./search.ts";
-import { SYSTEM_PROMPT, buildContext, buildMessages } from "./ask.ts";
+import type { SearchResult } from "../types.ts";
+import { SYSTEM_PROMPT, buildContext, buildMessages } from "./prompt.ts";
 
 // 테스트용 검색 결과: text는 실제 색인처럼 "문서 제목 > 소제목" 머리말로 시작한다.
 function fakeResult(id: string, text: string): SearchResult {
