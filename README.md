@@ -35,7 +35,7 @@ Follow the phases in order. Each one starts with a concept, adds a small piece o
 
 Each phase is one PR, so its diff shows only that phase. All of them are merged into `main`, and each phase's branch still exists: check one out (for example `git checkout feat/phase-4-search`) to see the repository as it was at that step.
 
-The full original plan (in Korean) is in [PLAN.md](PLAN.md). The Phase 6–7 experiment results are in [NOTES.md](NOTES.md) (Korean), and each phase's branch still exists for checking out.
+The full original plan (in Korean) is in [PLAN.md](PLAN.md). The Phase 6–7 experiment results are in [NOTES.md](NOTES.md) (Korean). What to build next (scaling to many documents, images and video, and the next phases) is in [ROADMAP.md](ROADMAP.md) (Korean).
 
 ## Requirements
 
@@ -94,4 +94,5 @@ src/eval.ts         run the question set, print hit@3 and refusal scores
 src/*.test.ts       tests (node:test)
 NOTES.md            Phase 6–7 experiment log (Korean)
 PLAN.md             the study plan (Korean)
+ROADMAP.md          next steps: scaling, multimodal, next phases (Korean)
 ```
