@@ -11,6 +11,7 @@
     "ingest": "tsx src/ingest.ts",
     "search": "tsx src/search.ts",
     "ask": "tsx src/ask.ts",
+    "eval": "tsx src/eval.ts",
     "test": "tsx --test src/*.test.ts"
   },
   "dependencies": {
