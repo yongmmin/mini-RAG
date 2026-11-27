@@ -10,7 +10,8 @@ Each step ("Phase") is its own pull request. The PR description explains what wa
 
 ```
 Indexing (once, when the documents change)
-  docs/*.md ──split──▶ 14 chunks ──bge-m3──▶ 1024 numbers per chunk ──▶ index.json (text + vector)
+  docs/*.md ──split──▶ 14 chunks ──bge-m3──▶ 1024 numbers per chunk ──▶ index.json (text + hash + vector)
+  (re-running ingest embeds only chunks whose text changed; the others reuse their vector from the previous index.json)
 
 Answering (every question)
   question ──bge-m3──▶ 1024 numbers
@@ -33,10 +34,11 @@ Follow the phases in order. Each one starts with a concept, adds a small piece o
 | 6 | Tuning experiments | Change one setting at a time; when retrieval is right but the answer is wrong; top-K trade-offs | [#7](https://github.com/yongmmin/mini-RAG/pull/7) |
 | 7 | Evaluation | A fixed 18-question set; retrieval (hit@3) and refusals scored separately; a perfect score that still hides the chunk-level change seen in Phase 6 | [#9](https://github.com/yongmmin/mini-RAG/pull/9) |
 | 8 | Hybrid search | Keyword search (BM25 over character bigrams) written by hand; merging two rankings by rank (RRF), not by score; a harder 25-question set where vector and keyword miss different questions | [#11](https://github.com/yongmmin/mini-RAG/pull/11) |
+| 9 | Incremental indexing | Same text + same model = same vector, so only changed chunks are embedded again; compare chunks by content hash, not by position (ids shift when a section is inserted) | [#13](https://github.com/yongmmin/mini-RAG/pull/13) |
 
 Each phase is one PR, so its diff shows only that phase. All of them are merged into `main`, and each phase's branch still exists: check one out (for example `git checkout feat/phase-4-search`) to see the repository as it was at that step.
 
-The full original plan (in Korean) is in [PLAN.md](PLAN.md). The Phase 6–7 experiment results are in [NOTES.md](NOTES.md) (Korean). What to build next (scaling to many documents, images and video, and the next phases) is in [ROADMAP.md](ROADMAP.md) (Korean).
+The full original plan (in Korean) is in [PLAN.md](PLAN.md). The Phase 6–9 experiment results are in [NOTES.md](NOTES.md) (Korean). What to build next (scaling to many documents, images and video, and the next phases) is in [ROADMAP.md](ROADMAP.md) (Korean).
 
 ## Requirements
 
@@ -58,7 +60,7 @@ nvm use
 npm install
 npm run check                       # Node, Ollama server, models, chat call, embedding call
 npm run ingest -- --dry-run         # show the chunks only
-npm run ingest                      # embed the chunks and write index.json
+npm run ingest                      # embed changed chunks only and write index.json (--full: embed everything again)
 npm run search "예약을 언제까지 취소할 수 있어?"   # top 3 chunks with scores
 npm run search -- --mode hybrid "OBS-로 시작하는 번호는 뭐야?"   # --mode vector (default) | keyword | hybrid
 npm run ask "예약을 언제까지 취소할 수 있어?"      # answer with [n] citations
@@ -91,14 +93,14 @@ src/config.ts       every tunable in one place: paths, Ollama URL, model names, 
 src/types.ts        shared data shapes: document, chunk, index file, search result, search mode
 src/errors.ts       IndexError / ChatError and Ollama error → "cause + fix command" messages
 src/llm.ts          Ollama client, embed(), chat()
-src/ingest/         load.ts (docs/*.md → documents), chunk.ts (markdown → chunks), indexer.ts (chunks → embeddings → index)
+src/ingest/         load.ts (docs/*.md → documents), chunk.ts (markdown → chunks), indexer.ts (chunks → content hash → embed only new chunks → index)
 src/store/          json-store.ts: read / write index.json, embedding-model check
 src/retrieval/      vector.ts (cosine), keyword.ts (bigram + BM25), hybrid.ts (RRF), search.ts (mode → ranker table)
 src/generation/     prompt.ts (rules + numbered chunks → messages), ask.ts (search → prompt → answer)
 src/evaluation/     score.ts (hit / refusal checks), run.ts (run the question set → scores)
 src/cli/            ingest.ts, search.ts, ask.ts, eval.ts: argument parsing, printing, exit codes (npm run …)
 src/**/*.test.ts    tests (node:test), next to the module they test
-NOTES.md            Phase 6–8 experiment log (Korean)
+NOTES.md            Phase 6–9 experiment log (Korean)
 PLAN.md             the study plan (Korean)
 ROADMAP.md          next steps: scaling, multimodal, next phases (Korean)
 ```

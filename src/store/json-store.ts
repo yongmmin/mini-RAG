@@ -14,12 +14,19 @@ export function checkEmbedModel(indexModel: string, currentModel: string): void 
   }
 }
 
-// index.json을 읽고 모델이 맞는지 확인한다. 문제가 있으면 throw (종료는 호출한 쪽이 결정한다).
+// index.json이 있으면 읽기만 한다 (모델 검사 없음). 없으면 undefined.
+// 증분 색인(ingest)은 모델이 달라도 읽어서 "전부 다시 embedding"을 스스로 판단해야 하므로 검사를 따로 둔다.
+export function readIndexFile(path = INDEX_PATH): IndexFile | undefined {
+  if (!existsSync(path)) return undefined;
+  return JSON.parse(readFileSync(path, "utf8")) as IndexFile;
+}
+
+// 검색용: index.json을 읽고 모델이 맞는지 확인한다. 문제가 있으면 throw (종료는 호출한 쪽이 결정한다).
 export function readIndex(path = INDEX_PATH): IndexFile {
-  if (!existsSync(path)) {
+  const index = readIndexFile(path);
+  if (!index) {
     throw new IndexError(`index.json이 없다. 먼저 색인을 만든다: npm run ingest`);
   }
-  const index = JSON.parse(readFileSync(path, "utf8")) as IndexFile;
   checkEmbedModel(index.embedModel, EMBED_MODEL);
   return index;
 }

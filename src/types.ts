@@ -16,8 +16,11 @@ export type ChunkDraft = {
   text: string; // "문서 제목 > 소제목\n본문" — embedding과 LLM에 실제로 들어가는 글
 };
 
-// index.json 한 조각 = Phase 2 조각(id, source, heading, text) + 그 text의 벡터.
-export type IndexedChunk = ChunkDraft & { embedding: number[] };
+// index.json 한 조각 = Phase 2 조각(id, source, heading, text) + text의 내용 hash(Phase 9) + 그 text의 벡터.
+export type IndexedChunk = ChunkDraft & {
+  hash?: string; // sha256(text). 다음 ingest가 "이 조각 그대로인가?"를 판단하는 기준. Phase 9 이전 색인에는 없다
+  embedding: number[];
+};
 export type IndexFile = {
   embedModel: string; // 검색할 때 질문도 같은 모델로 바꿔야 하므로 기록해 둔다
   dimensions: number; // 벡터 길이 (bge-m3 = 1024)
